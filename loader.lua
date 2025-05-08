@@ -1,106 +1,90 @@
--- DumpLoader.lua
--- Executor-friendly GUI property dumper with Config flags:
---   Config.Savetofile      → writefile("GuiPropertiesDump.txt", …)
---   Config.Copytoclipboard → setclipboard(…)
---   Config.Print           → print to console
-
--- 0) Config check
-if type(Config) ~= "table" then
+if type(Configuration) ~= "table" then
     error(
-        "❌ Config table missing!\n" ..
-        "Define it before running:\n" ..
-        "local Config = {\n" ..
+        "❌ Configuration table missing!\n" ..
+        "Configuration = {\n" ..
         "  Savetofile = true,\n" ..
         "  Copytoclipboard = false,\n" ..
         "  Print = false,\n" ..
         "}\n" ..
-        'loadstring(game:HttpGet("<your-raw-url>/DumpLoader.lua"))()'
+        'loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/GUI-Stealer/main/loader.lua"))()'
     )
 end
 
-local saveToFile      = Config.Savetofile
-local copyToClipboard = Config.Copytoclipboard
-local shouldPrint     = Config.Print
-
--- 1) Sanity checks
-if saveToFile then
-    assert(type(writefile)=="function", "Executor must support writefile for Savetofile")
-end
-if copyToClipboard then
-    assert(type(setclipboard)=="function", "Executor must support setclipboard for Copytoclipboard")
+if Configuration.Savetofile then
+    assert(type(writefile)=="function", "Executor needs writefile support for Savetofile")
 end
 
--- 2) Fetch properties table
-local Players     = game:GetService("Players")
+if Configuration.Copytoclipboard then
+    assert(type(setclipboard)=="function", "Executor needs setclipboard support for Copytoclipboard")
+end
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-local url        = "https://raw.githubusercontent.com/notr3th/Properties/main/GUI/GUI.lua"
-local chunk      = game:HttpGet(url)
-local Properties = loadstring(chunk)()
+local Properties = loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Properties/main/GUI/GUI.lua"))()
+local Lines = {}
 
--- 3) Accumulate every line into `lines`
-local lines = {}
+local function DumbInstance(Instance, Indent)
+    Indent = Indent or ""
+    Lines[#Lines+1] = string.format("%s[%s] %q", Indent, Instance.ClassName, Instance.Name)
 
-local function DumbInstance(instance, indent)
-    indent = indent or ""
-    lines[#lines+1] = string.format("%s[%s] %q", indent, instance.ClassName, instance.Name)
-    for attr, val in pairs(instance:GetAttributes()) do
-        lines[#lines+1] = string.format("%s  • Attribute – %s = %s", indent, attr, tostring(val))
+    for Attributes, Value in pairs(Instance:GetAttributes()) do
+        Lines[#Lines+1] = string.format("%s  • Attribute – %s = %s", Indent, Attributes, tostring(Value))
     end
-    local classDef = Properties[instance.ClassName]
-    if classDef then
-        local sections = classDef.Order or (function()
-            local tmp = {}
-            for k in pairs(classDef) do
-                if k ~= "Order" then tmp[#tmp+1] = k end
+
+    local ClassName = Properties[Instance.ClassName]
+    if ClassName then
+        local Sections = ClassName.Order or (function()
+            local Temp = {}
+            for k in pairs(ClassName) do
+                if k ~= "Order" then Temp[#Temp+1] = k end
             end
-            return tmp
+            return Temp
         end)()
-        for _, section in ipairs(sections) do
-            local props = classDef[section]
-            if type(props)=="table" then
-                lines[#lines+1] = string.format("%s  = %s =", indent, section)
-                for _, propName in ipairs(props) do
-                    local ok, v = pcall(function() return instance[propName] end)
+
+        for _, Section in ipairs(Sections) do
+            local Props = ClassName[Section]
+            if type(Props)=="table" then
+                Lines[#Lines+1] = string.format("%s  = %s =", Indent, Section)
+                for _, propName in ipairs(Props) do
+                    local ok, v = pcall(function() return Instance[propName] end)
                     if ok then
-                        lines[#lines+1] = string.format("%s    • %s = %s", indent, propName, tostring(v))
+                        Lines[#Lines+1] = string.format("%s    • %s = %s", Indent, propName, tostring(v))
                     end
                 end
             end
         end
     end
-    for _, child in ipairs(instance:GetChildren()) do
-        DumbInstance(child, indent.."    ")
+
+    for _, child in ipairs(Instance:GetChildren()) do
+        DumbInstance(child, Indent.."    ")
     end
 end
 
--- 4) Dump all ScreenGuis under PlayerGui
 for _, gui in ipairs(PlayerGui:GetChildren()) do
     if gui:IsA("ScreenGui") then
-        lines[#lines+1] = ("====== Dumping: %s ======"):format(gui.Name)
+        Lines[#Lines+1] = ("====== Dumping: %s ======"):format(gui.Name)
         DumbInstance(gui, "  ")
     end
 end
 
--- 5) Produce final output
-local output = table.concat(lines, "\n")
+local Output = table.concat(Lines, "\n")
 
--- Print to console?
-if shouldPrint then
-    for _, line in ipairs(lines) do
-        print(line)
+if Configuration.Print then
+    for _, Line in ipairs(Lines) do
+        print(Line)
     end
 end
 
--- Save to file?
-if saveToFile then
-    writefile("GuiPropertiesDump.txt", output)
-    print(("✅ Dump complete! Wrote %d lines to GuiPropertiesDump.txt"):format(#lines))
+if Configuration.Savetofile then
+    local Name = ("GuiPropertiesDump_%s.txt"):format(HttpService:GenerateGUID(false))
+    writefile(Name, Output)
+    print(("✅ Dump complete! Wrote %d lines to %s"):format(#Lines, Name))
 end
 
--- Copy to clipboard?
-if copyToClipboard then
-    setclipboard(output)
+if Configuration.Copytoclipboard then
+    setclipboard(Output)
     print("✅ Dump copied to clipboard.")
 end
