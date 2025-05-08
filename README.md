@@ -1,13 +1,11 @@
-> Note this is for educational purposes only
+# NOT FINISHED
 
-## Getting Started
-### Install
-Download [BlueStacks](https://www.bluestacks.com/) and open the emulator
+## How to use (PC)
+1. Download [BlueStacks](https://www.bluestacks.com/) and launch the emulator.
 
-Download [Codex](https://codex.lol/android) on the emulator and pick the roblox game you want to steal the gui from
+2. Once opened, download [Codex](https://codex.lol/android), sign in, and join the Roblox game that you wish to copy the GUI from.
 
-### Extracting gui
-Execute the code with codex
+3. Execute the code below using codex (advised to use only savetofile).
 ```lua
 Configuration = {
     Savetofile = true,
@@ -17,15 +15,16 @@ Configuration = {
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/GUI-Stealer/main/loader.lua"))()
 ```
-> I recommend you only use savetofile
 
-## Converting it to studio
-Download [GUI Stealer plugin]([https://github.com/notr3th](https://github.com/notr3th/GUI-Stealer/blob/main/Plugin.lua)) (not finished yet)
+5. Exit Roblox once it has finished stealing the GUI, go to System Apps> Media Manager> Explore> Codex> Workspace, pick the stored file, and export to Windows.
 
-Open roblox studio and put the plugin in your plugins folder
+6. To convert the output to GUI, download the [GUI Stealer plugin](https://github.com/notr3th/GUI-Stealer/blob/main/Plugin.lua) and place it in your Roblox Studio plugins folder.
 
-Restart roblox studio and make sure to open the plugin
+7. Restart Roblox Studio so it will display in the toolbar.
 
-Paste the extracted code into the text box and press import
+8. Click on it, and it should prompt you to pick your file containing the output. Once chosen, it will convert the output to GUI.
 
-## The plugin is still work in progress but i will finish it very soon
+## Youtube Tutorial
+https://www.youtube.com/watch?v=examplevideo
+
+> Please take note that this is strictly for educational purposes.
