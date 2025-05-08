@@ -1,69 +1,20 @@
--- GuiDumpClipboardImporter.lua
--- Enhanced: gracefully skips unknown classes, fixes size, color, and FontFace parsing
--- Plugin UI shows on load and toggles via toolbar button
--- Place under Plugins/
+local Studio = game:GetService("StudioService")
+local Toolbar = plugin:CreateToolbar("GUI Stealer")
+local ImportButton = Toolbar:CreateButton("Import", "", "rbxassetid://114445161415517")
 
-local toolbar    = plugin:CreateToolbar("GUI Tools")
-local importBtn  = toolbar:CreateButton("Clipboard Import", "Import GUI from clipboard dump", "")
-
-local widgetInfo = DockWidgetPluginGuiInfo.new(
-    Enum.InitialDockState.Right, true, true,
-    400, 300, 400, 300
-)
-local dock = plugin:CreateDockWidgetPluginGui("GuiDumpClipboardImporter", widgetInfo)
-dock.Title = "GUI Clipboard Importer"
--- Show UI by default
-dock.Enabled = true
-
--- UI setup
-local frame = Instance.new("Frame", dock)
-frame.Size                   = UDim2.new(1, -8, 1, -34)
-frame.Position               = UDim2.new(0, 4, 0, 30)
-frame.BackgroundTransparency = 1
-
-local infoLabel = Instance.new("TextLabel", frame)
-infoLabel.Size                   = UDim2.new(1, 0, 0, 30)
-infoLabel.Position               = UDim2.new(0, 0, 0, 0)
-infoLabel.Text                   = "Paste GuiDump output here, then click Import."
-infoLabel.TextWrapped            = true
-infoLabel.BackgroundTransparency = 1
-infoLabel.TextXAlignment         = Enum.TextXAlignment.Left
-infoLabel.TextYAlignment         = Enum.TextYAlignment.Top
-
-local dumpBox = Instance.new("TextBox", frame)
-dumpBox.Size             = UDim2.new(1, 0, 1, -60)
-dumpBox.Position         = UDim2.new(0, 0, 0, 35)
-dumpBox.ClearTextOnFocus = false
-dumpBox.MultiLine        = true
-dumpBox.PlaceholderText  = "Paste dump here…"
-dumpBox.Font             = Enum.Font.Code
-dumpBox.TextSize         = 14
-dumpBox.TextXAlignment   = Enum.TextXAlignment.Left
-dumpBox.TextYAlignment   = Enum.TextYAlignment.Top
-
-local importBtnGUI = Instance.new("TextButton", frame)
-importBtnGUI.Text            = "Import"
-importBtnGUI.Size            = UDim2.new(1, 0, 0, 30)
-importBtnGUI.Position        = UDim2.new(0, 0, 1, -30)
-importBtnGUI.AutoButtonColor = true
-
--- Property mappings
 local propTypeMap = {
-    -- Spatial
-    AbsolutePosition="Vector2", AbsoluteSize="Vector2",
-    AnchorPoint="Vector2", SizeOffset="Vector2",
-    ExtentsOffset="Vector2", ExtentsOffsetWorldSpace="Vector2",
-    CanvasPosition="Vector2", CanvasSize="Vector2",
-    StudsOffset="Vector3", StudsOffsetWorldSpace="Vector3",
-    -- Layout
-    Position="UDim2", Size="UDim2",
-    CellSize="UDim2", CellPadding="UDim2", Padding="UDim", CornerRadius="UDim",
-    -- Color
-    BackgroundColor3="Color3", BorderColor3="Color3", ImageColor3="Color3",
-    TextColor3="Color3", TextStrokeColor3="Color3", GroupColor3="Color3", Color="Color3"
+    AbsolutePosition="Vector2",AbsoluteSize="Vector2",
+    AnchorPoint="Vector2",SizeOffset="Vector2",
+    ExtentsOffset="Vector2",ExtentsOffsetWorldSpace="Vector2",
+    CanvasPosition="Vector2",CanvasSize="Vector2",
+    StudsOffset="Vector3",StudsOffsetWorldSpace="Vector3",
+    Position="UDim2",Size="UDim2",CellSize="UDim2",
+    CellPadding="UDim2",Padding="UDim", CornerRadius="UDim",
+    BackgroundColor3="Color3",BorderColor3="Color3",
+    ImageColor3="Color3",TextColor3="Color3",TextStrokeColor3="Color3",
+    GroupColor3="Color3",Color="Color3"
 }
 
--- Parsers
 local function parseVector2(s)
     local x,y = s:match("%s*([%d%.%-]+)%s*,%s*([%d%.%-]+)%s*")
     return x and y and Vector2.new(tonumber(x), tonumber(y))
@@ -92,12 +43,10 @@ end
 local function safeSet(inst, prop, val)
     local ok, err = pcall(function() inst[prop] = val end)
     if not ok then
-        warn(('[GUI Import] Skipping %s.%s = %s (%s)'):format(
-            inst.ClassName, prop, tostring(val), err:gsub("\n.*","")))
+        warn(('[GUI Stealer]: Skipping %s.%s = %s (%s)'):format(inst.ClassName, prop, tostring(val), err:gsub("\n.*","")))
     end
 end
 
--- Main dump parser
 local function parseDump(text)
     local root, stack = {}, {}
     local function indentLevel(s) return #(s:match('^(%s*)') or '') end
@@ -113,7 +62,7 @@ local function parseDump(text)
                 else inst.Parent = stack[#stack].inst end
                 table.insert(stack, {lvl=lvl, inst=inst})
             else
-                warn(('[GUI Import] Skipping unknown class %q'):format(cls))
+                warn(('[GUI Stealer]: Skipping unknown class %q'):format(cls))
                 while #stack>0 and stack[#stack].lvl>=lvl do table.remove(stack) end
                 table.insert(stack, {lvl=lvl, inst=nil})
             end
@@ -122,7 +71,6 @@ local function parseDump(text)
             if prop and val and #stack>0 then
                 local inst = stack[#stack].inst
                 if inst then
-                    -- Handle FontFace specially
                     if prop=="FontFace" then
                         local family, w, sty = val:match("Font%s*{%s*Family%s*=%s*([^,]+),%s*Weight%s*=%s*(%w+),%s*Style%s*=%s*(%w+)")
                         if family and w and sty then
@@ -134,7 +82,6 @@ local function parseDump(text)
                             end
                         end
                     else
-                        -- Generic handling
                         local t = propTypeMap[prop]
                         if t=="Vector2" then
                             local v2 = parseVector2(val); if v2 then safeSet(inst,prop,v2) end
@@ -162,22 +109,24 @@ local function parseDump(text)
     return root
 end
 
--- Toolbar button toggles UI
-importBtn.Click:Connect(function()
-    dock.Enabled = not dock.Enabled
-    if dock.Enabled then dumpBox:CaptureFocus() end
-end)
-
--- Import action
-importBtnGUI.MouseButton1Click:Connect(function()
-    local txt = dumpBox.Text or ""
-    if #txt<10 then warn('[GUI Import] dump is too short') return end
+ImportButton.Click:Connect(function()
+    local file = Studio:PromptImportFile({"txt","lua"})
+    if not file then
+        warn('[GUI Stealer]: No file selected or file too large')
+        return
+    end
+    local txt = file:GetBinaryContents()
+    if #txt < 10 then
+        warn('[GUI Import] dump is too short')
+        return
+    end
     local ok, res = pcall(parseDump, txt)
-    if not ok then warn('[GUI Import] parse error',res); return end
-    for _,sg in ipairs(res) do sg.Parent = game:GetService('StarterGui') end
-    warn(('[GUI Import] Imported %d ScreenGui(s)'):format(#res))
-    dock.Enabled=false
+    if not ok then
+        warn('[GUI Stealer]: parse error ' .. tostring(res))
+        return
+    end
+    for _, sg in ipairs(res) do
+        sg.Parent = game:GetService("StarterGui")
+    end
+    warn('[GUI Stealer]: Imported ' .. #res .. ' ScreenGui(s)')
 end)
-
--- Auto-focus
-spawn(function() wait(0.1); dumpBox:CaptureFocus() end)
