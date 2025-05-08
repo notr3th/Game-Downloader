@@ -11,7 +11,7 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
 
 -- 1) Pull in your big Properties table remotely
-local url        = "https://raw.githubusercontent.com/notr3th/Properties/main/full.lua"
+local url        = "https://raw.githubusercontent.com/notr3th/Properties/main/GUI/GUI.lua"
 local chunk      = game:HttpGet(url)
 local Properties = loadstring(chunk)()
 
