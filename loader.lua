@@ -10,7 +10,7 @@ local function fetchClassDef(className)
         return classCache[className]
     end
     local ok, chunk = pcall(function()
-        return game:HttpGet("https://raw.githubusercontent.com/notr3th/Properties/main/" .. className .. ".lua")
+        return game:HttpGet("https://raw.githubusercontent.com/notr3th/Properties/main/GUI/" .. className .. ".lua")
     end)
     if not ok then
         classCache[className] = false
