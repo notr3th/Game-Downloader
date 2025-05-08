@@ -1,13 +1,13 @@
 if type(Configuration) ~= "table" then
-    error(
-        "❌ Configuration table missing!\n" ..
-        "Configuration = {\n" ..
-        "  Savetofile = true,\n" ..
-        "  Copytoclipboard = false,\n" ..
-        "  Print = false,\n" ..
-        "}\n" ..
-        'loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/GUI-Stealer/main/loader.lua"))()'
-    )
+    error([[❌ Configuration table missing!
+        Configuration = {
+          Savetofile = true,
+          Copytoclipboard = false,
+          Print = false,
+        }
+
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/GUI-Stealer/main/loader.lua"))()
+    ]])
 end
 
 if Configuration.Savetofile then
@@ -79,7 +79,7 @@ if Configuration.Print then
 end
 
 if Configuration.Savetofile then
-    local Name = ("GuiPropertiesDump_%s.txt"):format(HttpService:GenerateGUID(false))
+    local Name = ("GUISTEALER_%s.txt"):format(HttpService:GenerateGUID(false))
     writefile(Name, Output)
     print(("✅ Dump complete! Wrote %d lines to %s"):format(#Lines, Name))
 end
