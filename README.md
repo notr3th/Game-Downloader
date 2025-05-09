@@ -3,7 +3,7 @@
 ## How to use (PC)
 1. Download [BlueStacks](https://www.bluestacks.com/) and launch the emulator.
 
-2. Once opened, download [Codex](https://codex.lol/android), create a fresh account, and join the Roblox game that you wish to copy the GUI from.
+2. Once opened, download [Codex](https://codex.lol/android), create fresh account, and join the Roblox game that you wish to copy the GUI from.
 
 3. Execute the code below using codex (advised to use only savetofile).
 ```lua
