@@ -1,4 +1,4 @@
-# NOT FINISHED
+# OUTDATED
 
 ## How to use (PC)
 1. Download [BlueStacks](https://www.bluestacks.com/) and launch the emulator.
