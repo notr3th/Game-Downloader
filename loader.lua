@@ -6,7 +6,7 @@ if type(Configuration) ~= "table" then
           Print = false,
         }
 
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/GUI-Stealer/main/loader.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Properties/main/Classes.lua"))()
     ]])
 end
 
@@ -23,37 +23,24 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-local Properties = loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Properties/main/GUI/GUI.lua"))()
+local Properties = loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Properties/main/Classes.lua"))()
 local Lines = {}
 
 local function DumbInstance(Instance, Indent)
     Indent = Indent or ""
     Lines[#Lines+1] = string.format("%s[%s] %q", Indent, Instance.ClassName, Instance.Name)
 
-    for Attributes, Value in pairs(Instance:GetAttributes()) do
-        Lines[#Lines+1] = string.format("%s  • Attribute – %s = %s", Indent, Attributes, tostring(Value))
+    for attr, val in pairs(Instance:GetAttributes()) do
+        Lines[#Lines+1] = string.format("%s  • Attribute – %s = %s", Indent, attr, tostring(val))
     end
 
-    local ClassName = Properties[Instance.ClassName]
-    if ClassName then
-        local Sections = ClassName.Order or (function()
-            local Temp = {}
-            for k in pairs(ClassName) do
-                if k ~= "Order" then Temp[#Temp+1] = k end
-            end
-            return Temp
-        end)()
-
-        for _, Section in ipairs(Sections) do
-            local Props = ClassName[Section]
-            if type(Props)=="table" then
-                Lines[#Lines+1] = string.format("%s  = %s =", Indent, Section)
-                for _, propName in ipairs(Props) do
-                    local ok, v = pcall(function() return Instance[propName] end)
-                    if ok then
-                        Lines[#Lines+1] = string.format("%s    • %s = %s", Indent, propName, tostring(v))
-                    end
-                end
+    local Props = Properties[Instance.ClassName]
+    if Props then
+        Lines[#Lines+1] = string.format("%s  = Properties =", Indent)
+        for _, propName in ipairs(Props) do
+            local ok, v = pcall(function() return Instance[propName] end)
+            if ok then
+                Lines[#Lines+1] = string.format("%s    • %s = %s", Indent, propName, tostring(v))
             end
         end
     end
