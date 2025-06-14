@@ -13,13 +13,13 @@ Configuration = {
 loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Game-Downloader/main/loader.lua"))()
 ```
 
-5. Exit Roblox once it has finished stealing the GUI, go to System Apps> Media Manager> Explore> Codex> Workspace, pick the stored file, and export to Windows.
+5. Exit Roblox once it has finished stealing the game, go to System Apps> Media Manager> Explore> Codex> Workspace, pick the stored file, and export to Windows.
 
-6. To convert the output to GUI, download the [Importer plugin](https://github.com/notr3th/GUI-Stealer/blob/main/Plugin.lua) and place it in your Roblox Studio plugins folder.
+6. To convert the output to studio, download the [Importer plugin](https://github.com/notr3th/GUI-Stealer/blob/main/Plugin.lua) and place it in your Roblox Studio plugins folder.
 
 7. Restart Roblox Studio so it will display in the toolbar.
 
-8. Click on it, and it should prompt you to pick your file containing the output. Once chosen, it will convert the output to GUI.
+8. Click on it, and it should prompt you to pick your file containing the output. Once chosen, it will convert the output to your game.
 
 ## Video Tutorial
 https://www.youtube.com/watch?v=examplevideo
