@@ -15,7 +15,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Game-Download
 
 5. Exit Roblox once it has finished stealing the GUI, go to System Apps> Media Manager> Explore> Codex> Workspace, pick the stored file, and export to Windows.
 
-6. To convert the output to GUI, download the [GUI Stealer plugin](https://github.com/notr3th/GUI-Stealer/blob/main/Plugin.lua) and place it in your Roblox Studio plugins folder.
+6. To convert the output to GUI, download the [Importer plugin](https://github.com/notr3th/GUI-Stealer/blob/main/Plugin.lua) and place it in your Roblox Studio plugins folder.
 
 7. Restart Roblox Studio so it will display in the toolbar.
 
