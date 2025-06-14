@@ -8,12 +8,11 @@
 3. Execute the code below using codex (advised to use only savetofile).
 ```lua
 Configuration = {
+    Threads = 100,
     Savetofile = true,
-    Copytoclipboard = false,
-    Print = false
 }
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/GUI-Stealer/main/loader.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Game-Downloader/main/loader.lua"))()
 ```
 
 5. Exit Roblox once it has finished stealing the GUI, go to System Apps> Media Manager> Explore> Codex> Workspace, pick the stored file, and export to Windows.
