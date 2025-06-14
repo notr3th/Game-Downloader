@@ -3,7 +3,7 @@
 
 2. Once opened, download [Codex](https://codex.lol/android), create fresh account, and join the Roblox game that you wish to copy the GUI from.
 
-3. Execute the code below using codex (advised to use only savetofile).
+3. Execute the code below using codex (advised to use defualt).
 ```lua
 Configuration = {
     Threads = 100,
