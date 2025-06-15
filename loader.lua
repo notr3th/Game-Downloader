@@ -4,6 +4,7 @@ if type(Configuration) ~= "table" then
         Configuration = {
             Threads = 100,
             Savetofile = true,
+            AllServices = false
         }
         
         loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Game-Downloader/main/loader.lua"))()
@@ -43,6 +44,27 @@ local finishedText = Finished:WaitForChild("TextLabel2")
 local transitionCooldown = false
 local menuCooldown = false
 local finishedCooldown = false
+local startTime = 0
+
+-------\\ Lists //-------
+Services = {
+    ["Workspace"] = true,
+    ["Players"] = true,
+    ["Lighting"] = true,
+    ["MaterialService"] = true,
+    ["ReplicatedFirst"] = true,
+    ["ReplicatedStorage"] = true,
+    ["StarterGui"] = true,
+    ["StarterPack"] = true,
+    ["Teams"] = true,
+    ["SoundService"] = true,
+    ["TextChatService"] = true,
+    ["Chat"] = true,
+    ["LocalizationService"] = true,
+    ["TestService"] = true,
+    ["VoiceChatService"] = true,
+    ["VRService"] = true,
+}
 
 -------\\ Functions //-------
 local function DumbInstance(Instance, Indentation)
@@ -66,7 +88,8 @@ local function DumbInstance(Instance, Indentation)
         end
     end
 
-    assetsText.PlaceholderText = ("%d/%d Assets copied..."):format(takenAssets, totalAssets or 0)
+    local elapsed = tick() - startTime
+    assetsText.PlaceholderText = ("%d/%d Assets copied... (%dm %ds)"):format(takenAssets, totalAssets, math.floor(elapsed / 60), math.floor(elapsed % 60))
 
     if takenAssets % Configuration.Threads == 0 then
         task.wait()
@@ -113,22 +136,28 @@ menuButton.Activated:Connect(function()
     if menuCooldown then return end
     menuCooldown = true
 
-	Transition(function()
-		Menu.Visible = false
-		Assets.Visible = true
-	end)
-
     for _, Service in ipairs(game:GetChildren()) do
-        totalAssets +=  #Service:GetDescendants()
+        if Configuration.AllServices or Services[Service.ClassName] then
+            totalAssets +=  #Service:GetDescendants()
+        end
     end
     totalAssets -= 42
+    assetsText.PlaceholderText = "0/" .. totalAssets .. " Assets copied..."
 
+	Transition(function()
+		Menu.Visible = false
+		Assets.Visible = true 
+	end)
+
+    startTime = tick()
     for _, Service in ipairs(game:GetChildren()) do
-        Lines[#Lines+1] = ("====== Dumping: %s ======"):format(Service.Name)
-        DumbInstance(Service, "  ")
+        if Configuration.AllServices or Services[Service.ClassName] then
+            Lines[#Lines+1] = ("====== Dumping: %s ======"):format(Service.Name)
+            DumbInstance(Service, "  ")
+        end
     end
 
-    assetsText.PlaceholderText = ("%d/%d Assets copied..."):format(totalAssets, totalAssets)
+    assetsText.PlaceholderText = ("Saving game file..."):format(totalAssets, totalAssets)
 
     wait(2.5)
     
