@@ -34,4 +34,4 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Game-Download
 | AllServices | If set to true, it will save instances from all services. It's usually best to leave this false, since most of the extra services aren't useful—unless you specifically need them for your own purposes. |
 
 ##
-> Please take note that this is strictly for educational purposes.
+> Please take note that this is strictly for educational purposes only.
