@@ -1,9 +1,11 @@
 ## How to use (PC)
-1. Download [**BlueStacks**](https://www.bluestacks.com/) and launch the emulator.
+1. Download [**BlueStacks**](https://www.bluestacks.com/) and launch the multi-instance manager.
 
-2. Once opened, download [**CodeX**](https://codex.lol/android), create fresh account, and join the Roblox game that you wish to copy the GUI from.
+2. Go to instances and create a fresh instance with Nougat 32-bit, then launch it when it's finished installing.
 
-3. Execute the code below using codex (advised to use defualt).
+3. Once opened, download [**CodeX**](https://codex.lol/android), create fresh account, and join the Roblox game that you wish to copy the GUI from.
+
+4. Execute the code below using codex (advised to use defualt).
 ```lua
 Configuration = {
     Threads = 100,
