@@ -143,13 +143,14 @@ function Notification:Notify(Text, Details, Miscellaneous)
         Decline.ImageColor3 = Color3.fromRGB(255, 84, 84)
 
         coroutine.wrap(function()
-            local active = true
+            local Pending = true
 
             Accept.MouseButton1Click:Connect(function()
                 pcall(function()
                     Miscellaneous.Callback(true)
                 end)
-                active = false
+                Pending = false
+
                 Shadow:TweenSize(UDim2.new(0, 0, 0, 0), "Out", "Linear", 0.2)
                 wait(0.2)
                 Shadow:Destroy()
@@ -159,16 +160,16 @@ function Notification:Notify(Text, Details, Miscellaneous)
                 pcall(function()
                     Miscellaneous.Callback(false)
                 end)
-                active = false
+                Pending = false
+
                 Shadow:TweenSize(UDim2.new(0, 0, 0, 0), "Out", "Linear", 0.2)
                 wait(0.2)
                 Shadow:Destroy()
             end)
-
             Outline:TweenSize(UDim2.new(0, 0, 0, 2), "Out", "Linear", Details.Time)
             wait(Details.Time)
 
-            if active then
+            if Pending then
                 Shadow:TweenSize(UDim2.new(0, 0, 0, 0), "Out", "Linear", 0.2)
                 wait(0.2)
                 Shadow:Destroy()
