@@ -1,4 +1,4 @@
-## How to use (PC)
+# How to use (PC)
 1. Download [**BlueStacks**](https://www.bluestacks.com/) and launch the multi-instance manager.
 
 2. Go to instances and create a fresh instance with Nougat 32-bit, then launch it when it's finished installing.
@@ -33,5 +33,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/notr3th/Game-Download
 | Savetofile | Turning this off means the game file won't be saved at all. Only disable it if you're testing things out. |
 | AllServices | If set to true, it will save instances from all services. It's usually best to leave this false, since most of the extra services aren't useful—unless you specifically need them for your own purposes. |
 
-##
+#
 > Please take note that this is strictly for educational purposes only.
