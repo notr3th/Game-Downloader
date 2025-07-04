@@ -71,7 +71,7 @@ function Notification:Notify(Text, Details, Miscellaneous)
     Description.TextYAlignment = Enum.TextYAlignment.Top
 
     if Type == "Default" then
-        coroutine.wrap(function()
+
             local script = Instance.new("LocalScript", Shadow)
 
             Shadow:TweenSize(UDim2.new(0, 240, 0, 90), "Out", "Linear", 0.2)
@@ -85,7 +85,7 @@ function Notification:Notify(Text, Details, Miscellaneous)
             wait(0.2)
 
             Shadow:Destroy()
-        end)()
+
     elseif Type == "Image" then
         Shadow:TweenSize(UDim2.new(0, 240, 0, 90), "Out", "Linear", 0.2)
         Window.Size = UDim2.new(0, 230, 0, 80)
@@ -103,7 +103,7 @@ function Notification:Notify(Text, Details, Miscellaneous)
         ImageButton.Image = Miscellaneous.Image
         ImageButton.ImageColor3 = Miscellaneous.ImageColor
 
-        coroutine.wrap(function()
+
             local script = Instance.new('LocalScript', Shadow)
             Outline:TweenSize(UDim2.new(0, 0, 0, 2), "Out", "Linear", Details.Time)
 
@@ -114,7 +114,7 @@ function Notification:Notify(Text, Details, Miscellaneous)
             wait(0.2)
 
             Shadow:Destroy()
-        end)()
+
     elseif Type == "Option" then
         Shadow:TweenSize(UDim2.new(0, 240, 0, 110), "Out", "Linear", 0.2)
         Window.Size = UDim2.new(0, 230, 0, 100)
@@ -146,7 +146,7 @@ function Notification:Notify(Text, Details, Miscellaneous)
         Decline.Image = "http://www.roblox.com/asset/?id=6031094678"
         Decline.ImageColor3 = Color3.fromRGB(255, 84, 84)
 
-        coroutine.wrap(function()
+
             local script = Instance.new("LocalScript", Shadow)
             local Pending = true
 
@@ -185,7 +185,7 @@ function Notification:Notify(Text, Details, Miscellaneous)
 
                 Shadow:Destroy()
             end
-        end)()
+
     end
 end
 
