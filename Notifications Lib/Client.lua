@@ -1,22 +1,27 @@
 local Notification = {}
+local CoreGui = game:GetService("CoreGui")
+local STX_Notification = CoreGui:FindFirstChild("STX_Notification")
+
+if not STX_Notification then
+    local STX_Notification = Instance.new("ScreenGui")
+    local UIListLayout = Instance.new("UIListLayout")
+    STX_Notification.Name = "STX_Notification"
+    STX_Notification.Parent = CoreGui
+    STX_Notification.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    STX_Notification.ResetOnSpawn = false
+    
+    UIListLayout.Name = "UIListLayout"
+    UIListLayout.Parent = STX_Notification
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+end
 
 function Notification:Notify(Text, Details, Miscellaneous)
-    local CoreGui = game:GetService("CoreGui")
-
-    local container = CoreGui:FindFirstChild("STX_Notification")
-    if not container then
-        container = Instance.new("ScreenGui")
-        container.Name = "STX_Notification"
-        container.ResetOnSpawn = false
-        container.IgnoreGuiInset = true
-        container.Parent = CoreGui
-    end
-
     local Type = string.lower(tostring(Details.Type))
-
     local Shadow = Instance.new("ImageLabel")
     Shadow.Name = "Shadow"
-    Shadow.Parent = container
+    Shadow.Parent = STX_Notification
     Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
     Shadow.BackgroundTransparency = 1
     Shadow.BorderSizePixel = 0
