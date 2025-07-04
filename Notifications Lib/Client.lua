@@ -3,7 +3,7 @@ local CoreGui = game:GetService("CoreGui")
 local STX_Notification = CoreGui:FindFirstChild("STX_Notification")
 
 if not STX_Notification then
-    local STX_Notification = Instance.new("ScreenGui")
+    STX_Notification = Instance.new("ScreenGui")
     local UIListLayout = Instance.new("UIListLayout")
     STX_Notification.Name = "STX_Notification"
     STX_Notification.Parent = CoreGui
